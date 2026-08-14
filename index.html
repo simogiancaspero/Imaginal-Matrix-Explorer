@@ -89,6 +89,36 @@ input.sl::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#
   .ex-list li{font-size:11px;margin-bottom:4px;color:rgba(241,240,255,0.92);}
   footer{flex-shrink:0;border-top:.5px solid rgba(255,255,255,0.06);background:rgba(7,0,15,0.8);padding:.7rem 1.8rem;text-align:center;font-size:10.5px;color:rgba(241,240,255,0.88);}
 footer span{color:rgba(139,92,246,0.55);}
+  </style>
+  <style>
+  /* Responsive tweaks for small screens */
+  @media (max-width: 800px) {
+    .app{height:auto;min-height:100vh;}
+    .wrap{flex-direction:column;}
+    .sb{width:100%;flex-shrink:0;border-right:none;border-bottom:.5px solid rgba(255,255,255,0.06);max-height:38vh;overflow:auto;padding:.9rem;}
+    .main{padding:.8rem;}
+    .hdr,.toolbar,footer{padding-left:1rem;padding-right:1rem;}
+    .flags{position:static;top:auto;right:auto;transform:none;margin-top:8px;display:flex;gap:8px;}
+    .orb.o1,.orb.o2,.orb.o3{width:220px;height:220px;filter:blur(60px);} 
+    .cnt-n{font-size:22px;}
+    .cname{font-size:14px;}
+    .card{padding:.8rem;border-radius:12px;}
+    .bip-poles{flex-wrap:wrap;gap:8px;}
+    input.sl{height:4px;}
+    input.sl::-webkit-slider-thumb{width:18px;height:18px;}
+    input.sl::-moz-range-thumb{width:18px;height:18px;}
+    /* ensure page can scroll when content is long */
+    .app, .main, .sb{overflow:visible;}
+  }
+
+  @media (max-width:420px){
+    .hdr-t{font-size:16px;}
+    .hdr-s{font-size:12px;}
+    .sb-lbl{font-size:10px;}
+    .pn{font-size:11px}
+    .cnt-n{font-size:20px}
+  }
+  </style>
 </style>
 </head>
 <body>
