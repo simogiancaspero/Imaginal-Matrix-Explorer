@@ -96,6 +96,16 @@ footer span{color:rgba(139,92,246,0.55);}
     .app{height:auto;min-height:100vh;}
     .wrap{flex-direction:column;}
     .sb{width:100%;flex-shrink:0;border-right:none;border-bottom:.5px solid rgba(255,255,255,0.06);max-height:38vh;overflow:auto;padding:.9rem;}
+    /* ensure sidebar controls stack and sliders don't overlap labels */
+    .pb{padding-bottom:.6rem;}
+    .ph{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:10px;}
+    .ph .pn{margin-bottom:4px;}
+    .ph .sv{margin-left:0;align-self:flex-end;}
+    input.sl{width:100%;margin-top:6px;}
+    /* hide hover tooltips on touch devices to avoid overlap */
+    .tip-b{display:none !important;}
+    /* make sidebar above main content to avoid visual overlap */
+    .sb{position:relative;z-index:3}
     .main{padding:.8rem;}
     .hdr,.toolbar,footer{padding-left:1rem;padding-right:1rem;}
     .flags{position:static;top:auto;right:auto;transform:none;margin-top:8px;display:flex;gap:8px;}
