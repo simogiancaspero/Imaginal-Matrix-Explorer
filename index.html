@@ -16,10 +16,11 @@ html,body{height:100%;background:#07000f;color:#F1F0FF;font-family:-apple-system
 @keyframes fb{0%,100%{transform:translate(0,0);}50%{transform:translate(-50px,40px);}}
 @keyframes fc{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-35px,25px) scale(1.15);}}
 .app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
-.hdr{flex-shrink:0;padding:.9rem 1.8rem;border-bottom:.5px solid rgba(255,255,255,0.07);backdrop-filter:blur(20px);background:rgba(7,0,15,0.75);position:relative;}
+.hdr{flex-shrink:0;padding:.9rem 1.8rem;border-bottom:.5px solid rgba(255,255,255,0.07);backdrop-filter:blur(20px);background:rgba(7,0,15,0.75);position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .hdr-t{font-size:18px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(130deg,#FFFBFF,#C4B5FD 50%,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   .hdr-s{font-size:10.5px;color:rgba(241,240,255,0.88);margin-top:3px;}
-.flags{position:absolute;right:1.8rem;top:50%;transform:translateY(-50%);display:flex;gap:10px;font-size:20px;}
+.hdr-left{display:flex;align-items:center;gap:14px;}
+.flags{position:static;display:flex;gap:10px;font-size:20px;align-items:center;margin-left:6px}
 .flag{cursor:pointer;opacity:0.3;transition:all .2s;filter:grayscale(80%);}
 .flag:hover{opacity:0.7;}
 .flag.active{opacity:1;filter:grayscale(0%);transform:scale(1.1);}
@@ -28,6 +29,8 @@ html,body{height:100%;background:#07000f;color:#F1F0FF;font-family:-apple-system
   .mbtn:hover{background:rgba(255,255,255,0.05);color:rgba(241,240,255,0.95);}
 .mbtn.on{background:rgba(139,92,246,0.22);border-color:rgba(139,92,246,0.5);color:#C4B5FD;}
   .tnote{font-size:10.5px;color:rgba(241,240,255,0.88);margin-left:auto;}
+/* hide hamburger on large screens; show only on small */
+#btn-hamb{display:none}
 .wrap{flex:1;display:flex;overflow:hidden;}
 .sb{width:250px;flex-shrink:0;border-right:.5px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.01);padding:1.1rem 1.1rem;display:flex;flex-direction:column;gap:0;overflow-y:auto;}
 .sb::-webkit-scrollbar{width:3px;}
@@ -95,7 +98,13 @@ footer span{color:rgba(139,92,246,0.55);}
   @media (max-width: 800px) {
     .app{height:auto;min-height:100vh;}
     .wrap{flex-direction:column;}
-    .sb{width:100%;flex-shrink:0;border-right:none;border-bottom:.5px solid rgba(255,255,255,0.06);max-height:38vh;overflow:auto;padding:.9rem;}
+    /* hide sidebar by default on small screens; will open as overlay */
+    .sb{display:none;width:100%;flex-shrink:0;border-right:none;border-bottom:.5px solid rgba(255,255,255,0.06);max-height:38vh;overflow:auto;padding:.9rem;}
+    /* hamburger visible on small screens */
+    #btn-hamb{display:inline-flex;margin-left:6px}
+    /* overlay sidebar when opened */
+    .sb.open{display:flex;position:fixed;left:0;top:0;bottom:0;width:78%;max-width:420px;background:rgba(7,0,15,0.95);backdrop-filter:blur(10px);padding:1.1rem;flex-direction:column;z-index:60;overflow:auto;box-shadow:2px 0 24px rgba(0,0,0,0.6);}
+    .sb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:55;display:none}
     /* ensure sidebar controls stack and sliders don't overlap labels */
     .pb{padding-bottom:.6rem;}
     .ph{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:10px;}
@@ -135,12 +144,17 @@ footer span{color:rgba(139,92,246,0.55);}
 <div class="bg"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
 <div class="app">
   <header class="hdr">
-    <div class="hdr-t">Imaginal Matrix Explorer</div>
-    <div class="hdr-s" id="t-subtitle">CTD Framework &bull; Esplora 32 configurazioni fenomenologiche e le implicazioni di design.</div>
-    <div class="flags">
-      <span class="flag active" id="lang-it" title="Italiano">🇮🇹</span>
-      <span class="flag" id="lang-en" title="English">🇬🇧</span>
+    <div class="hdr-left">
+      <div>
+        <div class="hdr-t">Imaginal Matrix Explorer</div>
+        <div class="hdr-s" id="t-subtitle">CTD Framework &bull; Esplora 32 configurazioni fenomenologiche e le implicazioni di design.</div>
+      </div>
+      <div class="flags">
+        <span class="flag active" id="lang-it" title="Italiano">🇮🇹</span>
+        <span class="flag" id="lang-en" title="English">🇬🇧</span>
+      </div>
     </div>
+    <button class="mbtn" id="btn-hamb" aria-label="Apri menu" aria-expanded="false">☰</button>
   </header>
   <div class="toolbar">
     <button class="mbtn on" id="btn-man">Ricerca manuale</button>
@@ -151,6 +165,7 @@ footer span{color:rgba(139,92,246,0.55);}
     <aside class="sb" id="sb"><div class="sb-lbl" id="t-params">Parametri</div></aside>
     <main class="main" id="main"></main>
   </div>
+  <div id="sb-backdrop" class="sb-backdrop" style="display:none"></div>
   <footer id="t-footer">CTD Framework &bull; <span>Imaginal Matrix Web Tool</span> &bull; V07_Beta Release &bull; Simone Giancaspero, 2026</footer>
 </div>
 <script>
@@ -1325,6 +1340,35 @@ function mkCard(s,si,d){
   });
   return div;
 }
+
+// Mobile hamburger toggle for sidebar
+document.addEventListener('DOMContentLoaded', function(){
+  var btnHamb = document.getElementById('btn-hamb');
+  var sb = document.getElementById('sb');
+  var backdrop = document.getElementById('sb-backdrop');
+  if(!btnHamb || !sb || !backdrop) return;
+  btnHamb.addEventListener('click', function(){
+    var open = sb.classList.toggle('open');
+    backdrop.style.display = open ? 'block' : 'none';
+    btnHamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open) document.body.style.overflow='hidden'; else document.body.style.overflow='';
+  });
+  backdrop.addEventListener('click', function(){
+    sb.classList.remove('open');
+    backdrop.style.display='none';
+    btnHamb.setAttribute('aria-expanded','false');
+    document.body.style.overflow='';
+  });
+  // Close sidebar when resizing to larger screens
+  window.addEventListener('resize', function(){
+    if(window.innerWidth>800){
+      sb.classList.remove('open');
+      backdrop.style.display='none';
+      btnHamb.setAttribute('aria-expanded','false');
+      document.body.style.overflow='';
+    }
+  });
+});
 
 function render(){
   var items=STATES.map(function(s,si){return{s:s,si:si,d:autoDistance(s)};});
